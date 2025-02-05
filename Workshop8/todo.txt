@@ -1,0 +1,10 @@
+1. Make sure that the composition/aggregation relationship is present
+-composition between course and university and also composition between gradebook and university and composition between gradebook and grade 
+-aggregation between person and course 
+2. Ability to add infinite persons,courses,grade 
+3. Test main.cpp 
+4. need get_name , get_location , get_course for university
+5. need get_name and get_id for course 
+6. need get_person in course 
+7. print_grade of student given course id, assignment and value 
+8. Add specific assignment,student id,assignment and value

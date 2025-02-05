@@ -1,0 +1,75 @@
+#!/usr/bin/python3.8
+
+# =================================================================
+#                   Question object creation
+# =================================================================
+# # Example of potential procedural question creation
+#
+# for i in range(1,4):
+#     for j in range(1,6):
+#         qid = f'{i}-{j}'
+#         main_compile = CompileTest(points=1, provided_files = [],
+#                                    submitted_files=[f'main-{i}-{j}.cpp', f'function-{i}-{j}.cpp'])
+#         test_compile = CompileTest(points=1, provided_files = [f'test-{i}-{j}.cpp'],
+#                                    submitted_files=[f'function-{i}-{j}.cpp'])
+#         questions.append(Question(question_id=qid, max_points=5, file_points=1, test_points=1,
+#                                   compile_tests=[main_compile,test_compile], tester_idx=1))
+#
+# questions.append(Question("FileTest", max_points=1, file_points=1, extra_files=["plan.txt", "solution-1-1.txt"]))
+
+import json
+import autograder_util as ag
+
+
+# ========================================================================
+#              Set to true if assignment is a workshop.
+# If true, overwrites final score to participation_grade regardless of tests
+# for participation grade.
+participation_only = True
+participation_grade = 1
+# ========================================================================
+
+# List of questions objects
+questions = []
+
+# Class and file names for this specific session
+
+
+
+
+id = "1-1"
+c_tests = []
+c_tests.append(ag.CompileTest(submitted_files=['main.cpp' , 'University.cpp', 'Course.cpp', 'Person.cpp', 'Student.cpp' , 'Instructor.cpp','Gradebook.cpp', 'Grade.cpp'], points=1))
+c_tests.append(ag.CompileTest(submitted_files=['University.cpp', 'Course.cpp','Person.cpp', 'Student.cpp' , 'Instructor.cpp','Gradebook.cpp', 'Grade.cpp'], provided_files=[f'test-{id}.cpp'], points=1))
+
+q = ag.Question(question_id=id, max_points=10, file_points=4, test_points=4,
+             compile_tests=c_tests, tester_idx=1, extra_files=['University.h', 'Course.h', 'Person.h', 'Student.h' , 'Instructor.h','Gradebook.h', 'Grade.h'])
+questions.append(q)
+
+
+
+# id = "4-1"
+# c_tests = []
+# c_tests.append(ag.CompileTest(submitted_files=[f'main-{id}.cpp', f'{child}.cpp', f'{abstract}.cpp', f'{sorter}.cpp'],
+#                            points=3))
+# c_tests.append(ag.CompileTest(submitted_files=[f'{child}.cpp', f'{abstract}.cpp', f'{sorter}.cpp'],
+#                            provided_files=[f'test-{id}.cpp'], points=2))
+# q = ag.Question(question_id=id, max_points=10, file_points=1, test_points=4,
+#              compile_tests=c_tests, tester_idx=1, extra_files=[f'{sorter}.h'])
+# questions.append(q)
+
+
+
+result_json = ag.run_questions(questions, participation_only, participation_grade)
+
+# close Gradescope results file
+with open('results/results.json', 'w') as file:
+    json.dump(result_json, file)
+
+final_score = -1
+try:
+    final_score = result_json["score"]
+except:
+    print("result_json key error: Missing score key.")
+    print(result_json)
+print(f'Final grade:{final_score}')
