@@ -16,6 +16,7 @@ class Course {
  public:
   Course(int id, string name);
   void addPerson(Person* p);
+  std::vector<Person*>& get_persons();
   ~Course();
 };
 

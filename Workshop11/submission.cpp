@@ -48,9 +48,9 @@ int main() {
     Records myRecords;
 
     try {
-        RecordsManager recordM("test_clean.txt");
+        // RecordsManager recordM("test_clean-1.txt");
         // RecordsManager recordM("test_corrupt1.txt");  // Uncomment to test corrupt file 1
-        // RecordsManager recordM("test_corrupt2.txt");  // Uncomment to test corrupt file 2
+        RecordsManager recordM("test_corrupt2.txt");  // Uncomment to test corrupt file 2
         
         // Attempt to read records
         recordM.read(myRecords);

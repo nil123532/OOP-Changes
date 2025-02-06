@@ -12,6 +12,11 @@ class Grade {
 
  public:
   Grade(int stud_id, int course_id, std::string assignment, int value);
+  //Defining Getters to get the values of the private variables
+  int get_student_id();
+  int get_course_id();
+  std::string get_assignment();
+  int get_value();
   ~Grade();
 };
 

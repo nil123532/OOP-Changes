@@ -15,7 +15,7 @@ int main() {
         // adding course
         adl.addCourse(1234, "OOP");
         
-        std::vector<Course> my_courses = adl.get_courses();
+        std::vector<Course>& my_courses = adl.get_courses();
         
         // // creating student and adding them
         Student* seb = new Student("Seb", 1884670);
