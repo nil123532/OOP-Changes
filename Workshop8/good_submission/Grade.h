@@ -2,7 +2,7 @@
 #define GRADE_G
 
 #include <string>
-
+#include <iostream>
 class Grade {
  private:
   std::string assignment;

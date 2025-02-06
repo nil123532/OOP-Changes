@@ -2,6 +2,7 @@
 #define PERS_G
 
 #include <string>
+#include <iostream>
 
 class Person {
  protected:
@@ -10,6 +11,7 @@ class Person {
  public:
   Person();
   Person(std::string name);
+  std::string get_name(); //NR - Getting name to confirm if persons will still exist after course is destroyed
 
   ~Person();
 };

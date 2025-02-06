@@ -15,4 +15,7 @@ void University::addCourse(int id, string name) {
 }
 
 Gradebook* University::get_gradebook() { return gradebook; }
+
+std::vector<Course>& University::get_courses() { return cou; } //NR - Implementation of get_courses
+
 University::~University() { delete gradebook; }

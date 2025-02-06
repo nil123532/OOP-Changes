@@ -5,8 +5,9 @@ Course::Course(int id, string name) {
   this->id = id;
 }
 void Course::addPerson(Person* p) { pers.push_back(p); }
+
+
+// NR - Commenting out because of aggregation behaviour
 Course::~Course() {
-  for (int i = 0; i < pers.size(); i++) {
-    delete pers[i];
-  }
+  std::cout << "course destructor called" << std::endl;
 };

@@ -11,4 +11,6 @@ Grade::Grade(int stud_id, int course_id, std::string assignment, int value) {
   this->course_id = course_id;
 }
 
-Grade::~Grade() {}
+Grade::~Grade() {
+  std::cout << "grade destructor called" << std::endl;
+}

@@ -1,2 +1,6 @@
-1. Custom printing statement for each error type in the catch block 
-2. Compare with the logs
+Workshop 11:
+Custom Error Messages:
+Implement and test custom printing statements for each error type in the catch block.
+
+Log Comparison:
+Verify the program’s behavior by comparing outputs against provided log files.
