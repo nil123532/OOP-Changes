@@ -44,13 +44,14 @@ public:
     }
 };
 
-int main() {
+int main(int argc, char* argv[]) {
     Records myRecords;
 
-    try {
-        // RecordsManager recordM("test_clean-1.txt");
-        // RecordsManager recordM("test_corrupt1.txt");  // Uncomment to test corrupt file 1
-        RecordsManager recordM("test_corrupt2.txt");  // Uncomment to test corrupt file 2
+    string filename = "records.txt";
+    if (argc > 1) filename = argv[1];
+
+    try {            
+        RecordsManager recordM(filename); 
         
         // Attempt to read records
         recordM.read(myRecords);
