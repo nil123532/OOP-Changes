@@ -5,6 +5,8 @@
 #include "../good_submission/Person.h"
 #include <vector>
 
+
+//Testing Course and Person
 int main(){
     
     Course c1(1234, "OOP");
