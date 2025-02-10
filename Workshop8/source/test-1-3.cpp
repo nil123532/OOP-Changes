@@ -1,9 +1,9 @@
 //Testing composition relationship with course and university 
 
 #include <iostream>
-#include "../good_submission/Student.h"
-#include "../good_submission/University.h"
-#include "../good_submission/Course.h" 
+#include "Student.h"
+#include "University.h"
+#include "Course.h" 
 #include <vector>
 
 
@@ -17,7 +17,7 @@ int main() {
         
         std::vector<Course>& my_courses = adl.get_courses();
         
-        // // creating student and adding them
+        // creating student and adding them
         Student* seb = new Student("Seb", 1884670);
         my_courses[0].addPerson(seb);        // std::cout << "Course name is:" << (*my_courses)[0].get_name() << std::endl;
 
@@ -34,4 +34,3 @@ int main() {
 
     return 0;
 }
-

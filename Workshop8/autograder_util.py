@@ -25,7 +25,7 @@ To use:
     2. Create a Question object for each question (e.g. "1-1", "1-2", "3-5")
         and store in list  "questions".
     3. Each question can use optional CompileTest objects that defined the required files for
-        each compile test. If extra files are required that aren't used for compilation directly (header files, 
+        each compile test. If extra files are required that aren't used for compilation directly (header files,
 		plan.txt, solution.txt, etc.), a separate field in the Question class can be used: Question.extra_files.
 		These files get checked for FilesPresent checks but not used in compiling.
 	4. Points are broken into 3 types: FilesPresent (only gives points if all required files are present),
@@ -83,12 +83,14 @@ program_output = "program.output"
 program_error = "program.err"
 test_timeout = 5                    # Timeout for all program executions (in seconds)
 
+diff_args = ["Z", "B"]              # Ignore trailing whitespace & ignore blank lines
+
 # ========================================================================
 #              Set to true if assignment is a workshop.
 # If true, overwrites final score to participation_grade regardless of tests
 # for participation grade.
-participation_only = False
-participation_grade = 1
+#participation_only = False
+#participation_grade = 1
 # ========================================================================
 
 # utility functions
@@ -143,20 +145,8 @@ class Question:
         self.extra_files = extra_files
 
 
-# List of questions objects
-questions = []
-
-max_available_grade = 60
-# Create meta_data dictionary from file and extra max points
-with open('submission_metadata.json') as md:
-    meta_data = json.load(md)
-    max_available_grade = float(meta_data['assignment']['total_points'])
-
-result = {'score': 0, 'visibility': 'visible', 'stdout_visibility': 'hidden', 'tests': []}
-total_score = 0
-
 # Checks if passed file names are present in sub_prefix directory
-# Creates test entry in result['tests'], giving max_score points if all files are present
+# Adds score and feedback to current_test
 # Returns list of missing file names
 def check_present(current_test, file_names = [], max_score = 0):
     # Loop through list of required file names
@@ -173,7 +163,6 @@ def check_present(current_test, file_names = [], max_score = 0):
             file_size = os.path.getsize(cur_path)
             if file_size == 0:
                 out_str += f"Found {cur_file}, but it's empty!\n"
-                #out_str += f' it is empty!'
                 # Empty files are considered equivalent to the file being missing
                 missing_files.append(cur_file)
         else:
@@ -271,7 +260,9 @@ def check_diff(qid, tid):
         print(err)
         return err
 
-    cmd = ['diff', f'{exp_out_file}', 'program.output']
+    # Construct argument string, combining all args and prefixing with '-'
+    arg_str = f'-{"".join(diff_args)}'
+    cmd = ['diff', f'{arg_str}', f'{exp_out_file}', 'program.output']
     diff = subprocess.run(cmd, capture_output=True, text=True, timeout=test_timeout)
 
     if diff.returncode == 0:
@@ -292,7 +283,7 @@ def run_tests(current_test, qid, score_per_test):
     test_ids = get_test_ids(qid)
 
     for tid in test_ids:
-        print(f'Running Q{qid}, Test{tid}...')
+        print(f'\nRunning Q{qid}, Test{tid}...')
 
         # Get program args
         arg_filename = f'{src_prefix}args-{qid}-{tid}'
@@ -367,38 +358,50 @@ def run_tests(current_test, qid, score_per_test):
     silent_cleanup()
 
 
-def record_test(score, max_score, name, feedback, visibility = "visible"):
+def record_test(result_json, test_score, max_score, name, feedback, visibility = "visible"):
     # Create dictionary with test and append to results
-    global total_score
-    total_score += score
     test = {
-        "score": score,
+        "score": test_score,
         "max_score": max_score,
         "name": name,
         "output": feedback,
         "visibility": visibility
     }
-    result['tests'].append(test)
+    try:
+        result_json['tests'].append(test)
+    except:
+        print("\'tests\' key not found in result_json dictionary")
 
-def apply_cap(meta_test, meta_data, cur_score, participation_only = False):
+def apply_cap(meta_test, meta_data, cur_score, participation_only = False, participation_grade = 1):
     max_grade = float(meta_data['assignment']['total_points'])
-    result = cur_score
+    capped_score = cur_score
+
     if cur_score > max_grade:
         meta_test["output"] += f'Capping grade from {cur_score} to {max_grade}\n'
-        result = min(cur_score, max_grade)
+        capped_score = min(cur_score, max_grade)
 
     if participation_only:
-        result = participation_grade
+        capped_score = participation_grade
         meta_test["output"] += f'Workshop assessment, +{participation_grade} marks for participation\n'
 
-    return result
+    return capped_score
 
 def apply_late_penalty(meta_test, meta_data, cur_score):
-    result = cur_score
-    due_time = datetime.fromisoformat(meta_data['assignment']['due_date'])
+    score = cur_score
+
+    orig_due_time = datetime.fromisoformat(meta_data['assignment']['due_date'])
+    users = meta_data['users']
+    latest_due_time = orig_due_time
+    for user in users:
+        cur_due_time = datetime.fromisoformat(user['assignment']['due_date'])
+        if cur_due_time > latest_due_time:
+            local_time = cur_due_time.astimezone(timezone('Australia/Adelaide'))
+            print(f"Later due time (extension) found for user {user['name']} of {local_time}, instead of original due date: {orig_due_time.astimezone(timezone('Australia/Adelaide'))}")
+            latest_due_time = cur_due_time
+
     sub_time = datetime.fromisoformat(meta_data['created_at'])
     max_grade = float(meta_data['assignment']['total_points'])
-    lateness = sub_time - due_time
+    lateness = sub_time - latest_due_time
     if lateness > timedelta(0):
         print(f'Late submission, up to {1+math.ceil(lateness.days)} days late')
         # Cap is 25% per days late
@@ -414,8 +417,8 @@ def apply_late_penalty(meta_test, meta_data, cur_score):
             meta_test["output"] += f'capped to {new_score}.\n'
         else:
             meta_test["output"] += "unchanged.\n"
-        result = new_score
-    return result
+        score = new_score
+    return score
 
 def check_previous(meta_test, meta_data, cur_score):
     # Check previous submissions and use highest grade
@@ -438,144 +441,123 @@ def check_previous(meta_test, meta_data, cur_score):
         meta_test["output"] += f'Better submission from time: {best_date} (Adelaide time)\n'
     return best_score
 
+def run_questions(questions, participation_only = False, participation_grade = 1):
+    meta_data = {}
+    try:
+        md = open('submission_metadata.json')
+        meta_data = json.load(md)
+    except BaseException as ex:
+        print(f'An error occured when trying to open submission_metadata.json')
+        print(str(ex))
 
-# =================================================================
-#                   Question object creation
-# =================================================================
-# # Example of potential procedural question creation
-#
-# for i in range(1,4):
-#     for j in range(1,6):
-#         qid = f'{i}-{j}'
-#         main_compile = CompileTest(points=1, provided_files = [],
-#                                    submitted_files=[f'main-{i}-{j}.cpp', f'function-{i}-{j}.cpp'])
-#         test_compile = CompileTest(points=1, provided_files = [f'test-{i}-{j}.cpp'],
-#                                    submitted_files=[f'function-{i}-{j}.cpp'])
-#         questions.append(Question(question_id=qid, max_points=5, file_points=1, test_points=1,
-#                                   compile_tests=[main_compile,test_compile], tester_idx=1))
-# 
-# questions.append(Question("FileTest", max_points=1, file_points=1, extra_files=["plan.txt", "solution-1-1.txt"]))
+    result_json = {'score': 0, 'visibility': 'visible', 'stdout_visibility': 'hidden', 'tests': []}
 
-compile_test1 = CompileTest(submitted_files = ["main-1-1.cpp", "Musician.cpp"], provided_files=[], points=1)
-compile_test2 = CompileTest(submitted_files = ["Musician.cpp"], provided_files=["test-1-1.cpp"], points=2)
-q = Question(question_id="1-1", max_points=9, file_points=1, test_points=5,
-             compile_tests=[compile_test1, compile_test2], tester_idx=1, extra_files=["Musician.h"])
-questions.append(q)
+    # ===============================
+    #       Run Question tests
+    # ===============================
+    for q in questions:
+        silent_remove(f'{test_program}')
 
-compile_test1 = CompileTest(submitted_files = ["main-1-2.cpp", "Orchestra.cpp", "Musician.cpp"], provided_files=[], points=2)
-compile_test2 = CompileTest(submitted_files = ["Orchestra.cpp", "Musician.cpp"], provided_files=["test-1-2.cpp"], points=2)
-q = Question(question_id="1-2", max_points=14, file_points=0, test_points=10,
-             compile_tests=[compile_test1, compile_test2], tester_idx=1, extra_files=["Orchestra.h"])
-questions.append(q)
+        qid = q.qid
 
-compile_test1 = CompileTest(submitted_files = ["Orchestra.cpp", "Musician.cpp"], provided_files=["test-1-3.cpp"], points=1)
-q = Question(question_id="1-3", max_points=16, file_points=0, test_points=15,
-             compile_tests=[compile_test1], tester_idx=0)
-questions.append(q)
+        req_file_names = set()
+        for test in q.compile_tests:
+            for cur_file in test.submitted_files:
+                req_file_names.add(cur_file)
 
-
-# ===============================
-#       Run Question tests
-# ===============================
-for q in questions:
-    silent_remove(f'{test_program}')
-
-    qid = q.qid
-
-    req_file_names = set()
-    for test in q.compile_tests:
-        for cur_file in test.submitted_files:
+        for cur_file in q.extra_files:
             req_file_names.add(cur_file)
+        f_points = q.f_points
 
-    for cur_file in q.extra_files:
-        req_file_names.add(cur_file)
-    f_points = q.f_points
+        # Of the required files, move any header files from submission to source to ensure test drivers can compile
+        for cur_file in req_file_names:
+            components = cur_file.split('.')
+            ext = components[-1]
 
-    # Of the required files, move any header files from submission to source to ensure test drivers can compile
-    for cur_file in req_file_names:
-        components = cur_file.split('.')
-        ext = components[-1]
-
-        if ext == "h" or ext == 'hpp':
-            if not os.path.isfile(sub_prefix + cur_file):
+            try:
+                if ext == "h" or ext == 'hpp':
+                    print(f'\n========= Header file required: {cur_file}')
+                    # Don't overwrite file if it exists
+                    if not os.path.isfile(src_prefix + cur_file):
+                        print(f'Attempting to move {sub_prefix + cur_file} to {src_prefix + cur_file} to ensure test drivers can compile.')
+                        shutil.copyfile(sub_prefix + cur_file, src_prefix + cur_file)
+                    else:
+                        print(f'{src_prefix + cur_file} already exists. Not moving as it will overwrite existing file.')
+            except BaseException as ex:
+                print(f'An error occured when trying to move required files.')
+                print(str(ex))
                 continue
-            print(f'\n========= Found header file: {cur_file}')
-            # Don't overwrite file if it exists
-            if not os.path.isfile(src_prefix + cur_file):
-                print(f'Moving {sub_prefix + cur_file} to {src_prefix + cur_file} to ensure test drivers can compile.')
-                shutil.copyfile(sub_prefix + cur_file, src_prefix + cur_file)
-            else:
-                print(f'{src_prefix + cur_file} already exists. Not moving as it will overwrite existing file.')
+
+        current_test = {
+            "score": 0,
+            "max_score": 0,
+            "name": f'Q{qid}',
+            "output": ""
+        }
+
+        print(f'\n==================')
+        print(f'      Q{qid}      ')
+        print(f'==================')
+
+        # If failed, skip question because won't compile
+        missing_files = check_present(current_test, list(req_file_names), f_points)
+
+        compiled = False
+        for compile_test in q.compile_tests:
+            compiled = check_compile_target(current_test, compile_test.points, compile_test)
+            silent_remove(f'{test_program}')
 
 
-    current_test = {
+        # Separately compile test driver
+        if len(q.compile_tests) != 0:
+            idx = q.tester_idx
+            compiled = check_compile_target(None, 0, q.compile_tests[idx])
+
+        # If test driver didn't successfully compile, don't run tests
+        if not compiled:
+            print()
+            print(f'Q{qid} functionality tests skipped due to test driver failing to compile.')
+            print()
+            record_test(result_json, current_test["score"], q.max, current_test["name"], current_test["output"])
+            continue
+
+        # Run tests
+        run_tests(current_test, qid, q.test_points)
+
+        record_test(result_json, current_test["score"], q.max, current_test["name"], current_test["output"])
+
+        sys.stdout.flush()
+
+    # ===============================
+    #      Capping/Late Penalties
+    # ===============================
+
+    # Add test to results that gives no grades but provides details on submission,
+    # such as whether grade exceeds cap/max available marks, late penalties, whether previous
+    # submission grades are used, etc.
+    meta_test = {
         "score": 0,
         "max_score": 0,
-        "name": f'Q{qid}',
+        "name": "Submission details",
         "output": ""
     }
 
-    print(f'==================')
-    print(f'      Q{qid}      ')
-    print(f'==================')
+    # Calculate total score as sum of all test scores
+    total_score = 0
+    for test in result_json['tests']:
+        total_score += test['score']
 
-    # If failed, skip question because won't compile
-    missing_files = check_present(current_test, list(req_file_names), f_points)
+    total_score = apply_cap(meta_test, meta_data, total_score, participation_only, participation_grade)
 
-    compiled = False
-    for compile_test in q.compile_tests:
-        compiled = check_compile_target(current_test, compile_test.points, compile_test)
+    total_score = apply_late_penalty(meta_test, meta_data, total_score)
 
-        silent_remove(f'{test_program}')
+    total_score = check_previous(meta_test, meta_data, total_score)
 
+    result_json['tests'].append(meta_test)
+    result_json['score'] = total_score
 
-
-    # Separately compile test driver
-    if len(q.compile_tests) != 0:
-        idx = q.tester_idx
-        compiled = check_compile_target(None, 0, q.compile_tests[idx])
-
-    # If test driver didn't successfully compile, don't run tests
-    if not compiled:
-        print()
-        print(f'Q{qid} functionality tests skipped due to test driver failing to compile.')
-        print()
-        record_test(current_test["score"], q.max, current_test["name"], current_test["output"])
-        continue
-
-    # Run tests
-    run_tests(current_test, qid, q.test_points)
-
-    record_test(current_test["score"], q.max, current_test["name"], current_test["output"])
-
-    sys.stdout.flush()
+    return result_json
 
 
-# ===============================
-#      Capping/Late Penalties
-# ===============================
-
-# Add test to results that gives no grades but provides details on submission,
-# such as whether grade exceeds cap/max available marks, late penalties, whether previous
-# submission grades are used, etc.
-meta_test = {
-    "score": 0,
-    "max_score": 0,
-    "name": "Submission details",
-    "output": ""
-}
-
-total_score = apply_cap(meta_test, meta_data, total_score, participation_only)
-
-total_score = apply_late_penalty(meta_test, meta_data, total_score)
-
-total_score = check_previous(meta_test, meta_data, total_score)
-
-result['tests'].append(meta_test)
-result['score'] = total_score
-
-# close Gradescope results file
-with open('results/results.json', 'w') as file:
-    json.dump(result, file)
-
-print(f'Final grade:{total_score}')
+if __name__ == "__main__":
+    print("Incorrectly running utility function as main driver. Run run_autograder instead.")

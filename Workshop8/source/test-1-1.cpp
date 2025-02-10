@@ -1,8 +1,8 @@
 #include <iostream>
-#include "../good_submission/Student.h"
-#include "../good_submission/Instructor.h"
-#include "../good_submission/Course.h"
-#include "../good_submission/Person.h"
+#include "Student.h"
+#include "Instructor.h"
+#include "Course.h"
+#include "Person.h"
 #include <vector>
 
 
@@ -28,3 +28,4 @@ int main(){
     
     return 0;
 }
+

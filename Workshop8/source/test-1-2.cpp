@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../good_submission/Gradebook.h"
-#include "../good_submission/Grade.h"
+#include "Gradebook.h"
+#include "Grade.h"
 #include <vector>
 
 //Testing Gradebook and Grade
