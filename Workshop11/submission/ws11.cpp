@@ -30,9 +30,9 @@ public:
                     int value = stoi(line);  // Convert string to integer
                     records.push_back(value);
                 } catch (const invalid_argument &e) {
-                    throw runtime_error("Error: Invalid data found in file " + _filename + ": '" + line + "'");
+                    throw runtime_error("Error: Invalid data found in file:"  + line);
                 } catch (const out_of_range &e) {
-                    throw runtime_error("Error: Out of range value in file " + _filename + ": '" + line + "'");
+                    throw runtime_error("Error: Out of range value in file: "+ line);
                 }
             }
         } catch (...) {
