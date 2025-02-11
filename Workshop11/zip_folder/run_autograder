@@ -28,19 +28,8 @@
 #     response = urlopen(url)
 #     with open("autograder_util.py", "w") as f: f.write(response.read().decode())
 
-
-
-
 import json
 import autograder_util as ag
-
-#Get file points 
-# Get compilation points
-# Get test points
-# sum 
-# apply cap 
-# apply penalty 
-# apply max over points
 
 
 # ========================================================================
