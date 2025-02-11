@@ -13,7 +13,7 @@ class Person {
   Person(std::string name);
   std::string get_name(); //NR - Getting name to confirm if persons will still exist after course is destroyed
 
-  ~Person();
+  virtual ~Person();
 };
 
 #endif

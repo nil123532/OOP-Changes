@@ -12,4 +12,4 @@ Course::~Course() {
   std::cout << "course destructor called" << std::endl;
 };
 
-std::vector<Person*>& Course::get_persons() { return pers; }
+std::vector<Person*> Course::get_persons() { return pers; }

@@ -12,16 +12,17 @@ int main() {
     {
         // creating uni
         University adl("University of Adelaide", "South Australia");
-        // adding course
-        adl.addCourse(1234, "OOP");
-        
-        std::vector<Course>& my_courses = adl.get_courses();
-        
+        // creating course
+        Course comp(1234,"Computer Science");
+
+        // adding student to course
+        Person* seb = new Student("Seb", 1884670);
+        comp.addPerson(seb);
+
+        // adding course to uni
+        adl.addCourse(comp);
+
         // creating student and adding them
-        Student* seb = new Student("Seb", 1884670);
-        my_courses[0].addPerson(seb);        // std::cout << "Course name is:" << (*my_courses)[0].get_name() << std::endl;
-
-
         // adding grades
         Gradebook* main_gb = adl.get_gradebook(); 
         main_gb->addGrade(1884670, 1234, "assign 1", 90);
@@ -30,7 +31,6 @@ int main() {
 
         delete seb;
     }
-
 
     return 0;
 }

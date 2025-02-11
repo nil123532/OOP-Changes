@@ -8,14 +8,12 @@ University::University(string name, string location) {
   gradebook = new Gradebook();
 }
 
-void University::addCourse(int id, string name) {
-  Course a(id, name);
-
-  cou.push_back(a);
+void University::addCourse(Course new_course) {
+  cou.push_back(new_course);
 }
 
 Gradebook* University::get_gradebook() { return gradebook; }
 
-std::vector<Course>& University::get_courses() { return cou; } //NR - Implementation of get_courses
+std::vector<Course> University::get_courses() { return cou; } //NR - Implementation of get_courses
 
 University::~University() { delete gradebook; }

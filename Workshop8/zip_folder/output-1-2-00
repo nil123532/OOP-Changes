@@ -19,6 +19,9 @@ Course ID: 1234
 Assignment: assign 3
 Value: 100
 grade destructor called
+grade destructor called
+grade destructor called
+grade destructor called
 gradebook destructor called
 grade destructor called
 grade destructor called

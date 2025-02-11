@@ -17,9 +17,9 @@ class University {
 
  public:
   University(string name, string location);
-  void addCourse(int id, string name);
+  void addCourse(Course new_course);
   Gradebook* get_gradebook();
-  std::vector<Course>& get_courses(); //NR - Getting courses to ensure that the courses are destroyed when the university is destroyed
+  std::vector<Course> get_courses(); //NR - Getting courses to ensure that the courses are destroyed when the university is destroyed
   ~University();
 };
 

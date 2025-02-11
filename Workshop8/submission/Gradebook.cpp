@@ -8,7 +8,7 @@ void Gradebook::addGrade(int stud_id, int course_id, std::string assignment,
   grad.push_back(grade);
 }
 
-std::vector<Grade>& Gradebook::get_grades() {
+std::vector<Grade> Gradebook::get_grades() {
   return grad;
 }
 
