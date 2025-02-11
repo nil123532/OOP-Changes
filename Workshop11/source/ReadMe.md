@@ -13,4 +13,4 @@
   Uses `test_corrupt1.txt` for testing exception handling with corrupted data.
   
 - **test-1-3.cpp**  
-  Uses `test_corrupt2.txt` for testing exception handling with a different type of data corruption.
+  Uses `test_corrupt2.txt` for testing exception handling with a out of bounds data.
