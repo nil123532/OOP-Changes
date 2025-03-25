@@ -396,7 +396,7 @@ def apply_cap(meta_test, meta_data, cur_score, participation_only = False):
 
 def apply_late_penalty(meta_test, meta_data, cur_score):
     result = cur_score
-    due_time = datetime.fromisoformat(meta_data['assignment']['late_due_date']) if datetime.fromisoformat(meta_data['assignment']['late_due_date']) else datetime.fromisoformat(meta_data['assignment']['due_date'])
+    due_time = datetime.fromisoformat(meta_data['users'][0]['assignment']['due_date']) 
     sub_time = datetime.fromisoformat(meta_data['created_at'])
     max_grade = float(meta_data['assignment']['total_points'])
     lateness = sub_time - due_time
@@ -405,7 +405,7 @@ def apply_late_penalty(meta_test, meta_data, cur_score):
         # Cap is 25% per days late
         # cap_percent starts at 0.75 then decreases by 0.25 per FULL day after that
         # This is because if lateness > 0, then submission is "up to" 1 day late
-        late_cap_percent = max(0.0, 0.75 - (math.ceil(lateness.days) * 0.25))
+        late_cap_percent = max(0,0.75 - (math.ceil(lateness.days) * 0.25))
         late_capped_score = max_grade*late_cap_percent
         new_score = min(cur_score, late_capped_score)
         meta_test["output"] += "Late submission, "
@@ -564,11 +564,8 @@ meta_test = {
 }
 
 total_score = apply_cap(meta_test, meta_data, total_score, participation_only)
-print("total_score before late penalty:", total_score)
 
 total_score = apply_late_penalty(meta_test, meta_data, total_score)
-
-print("total_score after late penalty:", total_score)
 
 total_score = check_previous(meta_test, meta_data, total_score)
 

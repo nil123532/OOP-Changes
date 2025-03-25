@@ -15,7 +15,7 @@ Gradescope autograder script
 Feb 2022
 
 by Rhys Brailford (a1667692)
-Modified by Nilesh Ramgolam(a1814043)
+Modified by Nilesh Ramgolam (a1814043)
 School of Computer Science
 University of Adelaide
 ============
@@ -396,9 +396,7 @@ def apply_cap(meta_test, meta_data, cur_score, participation_only = False):
 
 def apply_late_penalty(meta_test, meta_data, cur_score):
     result = cur_score
-    print("Assignment due date:", meta_data['assignment']['due_date'])
-    print("Assignment late due date:", meta_data['assignment']['late_due_date'])
-    due_time = datetime.fromisoformat(meta_data['assignment']['late_due_date']) if meta_data['assignment']['late_due_date']  else datetime.fromisoformat(meta_data['assignment']['due_date']) 
+    due_time = datetime.fromisoformat(meta_data['users'][0]['assignment']['due_date']) 
     sub_time = datetime.fromisoformat(meta_data['created_at'])
     max_grade = float(meta_data['assignment']['total_points'])
     lateness = sub_time - due_time
@@ -407,7 +405,7 @@ def apply_late_penalty(meta_test, meta_data, cur_score):
         # Cap is 25% per days late
         # cap_percent starts at 0.75 then decreases by 0.25 per FULL day after that
         # This is because if lateness > 0, then submission is "up to" 1 day late
-        late_cap_percent = max(0,0.75 - (math.ceil(lateness.days) * 0.25))
+        late_cap_percent = 0.75 - (math.ceil(lateness.days) * 0.25)
         late_capped_score = max_grade*late_cap_percent
         new_score = min(cur_score, late_capped_score)
         meta_test["output"] += "Late submission, "
@@ -459,19 +457,18 @@ def check_previous(meta_test, meta_data, cur_score):
 # 
 # questions.append(Question("FileTest", max_points=1, file_points=1, extra_files=["plan.txt", "solution-1-1.txt"]))
 
-submitted_main = CompileTest(submitted_files = ["count.cpp", "main.cpp"], provided_files=[], points=1)
-provided_main = CompileTest(submitted_files = ["count.cpp"], provided_files=["main.cpp"], points=1)
+q1_compile = CompileTest(submitted_files = ["transform.cpp"], provided_files=[], points=1)
 
 # Use submitted main.cpp ro run tests
-q = Question(question_id="1-1", max_points=4, file_points=1, test_points=1,
-             compile_tests=[submitted_main, provided_main], tester_idx=0)
+q = Question(question_id="1-1", max_points=2, file_points=1, test_points=0,
+             compile_tests=[q1_compile], tester_idx=0)
 questions.append(q)
 
 # Run same tests, but use tester from provided main.cpp
-q = Question(question_id="1-1", max_points=4, file_points=1, test_points=1,
-             compile_tests=[submitted_main, provided_main], tester_idx=1)
+q2_compile = CompileTest(submitted_files = ["arithmetic.cpp"], provided_files=[], points=1)
+q = Question(question_id="1-2", max_points=2, file_points=1, test_points=0,
+             compile_tests=[q2_compile], tester_idx=0)
 questions.append(q)
-
 
 
 # ===============================
