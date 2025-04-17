@@ -28,8 +28,19 @@
 #     response = urlopen(url)
 #     with open("autograder_util.py", "w") as f: f.write(response.read().decode())
 
+
+#Created by Nilesh Ramgolam(a1814043)
+
 import json
 import autograder_util as ag
+
+#Get file points 
+# Get compilation points
+# Get test points
+# sum 
+# apply cap 
+# apply penalty 
+# apply max over points
 
 
 # ========================================================================
@@ -45,18 +56,18 @@ questions = []
 
 # 1-1
 c_tests = []
-c_tests.append(ag.CompileTest(points=10, provided_files=[], submitted_files=["ws11.cpp"]))
-q = ag.Question("1-1", max_points=10, file_points=1, test_points=1, compile_tests=c_tests, tester_idx=0)
+c_tests.append(ag.CompileTest(points=1, provided_files=[], submitted_files=["ws9.cpp"]))
+q = ag.Question("1-1", max_points=10, file_points=1, test_points=8, compile_tests=c_tests, tester_idx=0)
 questions.append(q)
 
 c_tests = []
-c_tests.append(ag.CompileTest(points=10, provided_files=[], submitted_files=["ws11.cpp"]))
-q = ag.Question("1-2", max_points=10, file_points=1, test_points=1, compile_tests=c_tests, tester_idx=0)
+c_tests.append(ag.CompileTest(points=1, provided_files=[], submitted_files=["ws9.cpp"]))
+q = ag.Question("1-2", max_points=10, file_points=1, test_points=8, compile_tests=c_tests, tester_idx=0)
 questions.append(q)
 
 c_tests = []
-c_tests.append(ag.CompileTest(points=10, provided_files=[], submitted_files=["ws11.cpp"]))
-q = ag.Question("1-3", max_points=10, file_points=1, test_points=1, compile_tests=c_tests, tester_idx=0)
+c_tests.append(ag.CompileTest(points=1, provided_files=[], submitted_files=["ws9.cpp"]))
+q = ag.Question("1-3", max_points=10, file_points=1, test_points=8, compile_tests=c_tests, tester_idx=0)
 questions.append(q)
 
 
