@@ -1,17 +1,17 @@
-Test 1 – Create Truck (8000 kg, 120 L, 1800 kg cargo) and travel 100 km at 90 km/h
+Test 1 - Create Truck (8000 kg, 120 L, 1800 kg cargo) and travel 100 km at 90 km/h
 Fuel: 100%
 Trips: 0
 Fuel after travel: 92%
 Trips after travel: 1
 
-Test 2 – Create Truck (10000 kg, 150 L, 3000 kg cargo), set fuel to 50 %, travel 200 km at 110 km/h
+Test 2 - Create Truck (10000 kg, 150 L, 3000 kg cargo), set fuel to 50 %, travel 200 km at 110 km/h
 Fuel: 50%
 Trips: 2
 Fuel after travel: 28%
 Operational: yes
 Trips after travel: 3
 
-Test 3 – Create Truck (9000 kg, 100 L, 2600 kg cargo), set fuel = 11 %, attempt 100 km at 70 km/h (should refuse)
+Test 3 - Create Truck (9000 kg, 100 L, 2600 kg cargo), set fuel = 11 %, attempt 100 km at 70 km/h (should refuse)
 Fuel: 11%
 Trips: 0
 Fuel after attempt: 11% (unchanged if no take-off)

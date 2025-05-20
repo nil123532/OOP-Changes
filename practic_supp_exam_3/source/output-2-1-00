@@ -4,8 +4,7 @@ Initial trips: 0
 Fuel after travel: 97%
 Trips after travel: 1
 
-Test 2 - Create a Car (1600 kg, 60 L, 5 passengers).
-Set fuel to 15 %, simulate prior trips, then travel 200 km at 120 km/h
+Test 2 - Create a Car (1600 kg, 60 L, 5 passengers). Set fuel to 15 %, simulate prior trips, then travel 200 km at 120 km/h
 Fuel after manual set: 15%
 Trips after manual set: 3
 Fuel after travel: 4%
