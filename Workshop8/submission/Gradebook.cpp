@@ -11,7 +11,3 @@ void Gradebook::addGrade(int stud_id, int course_id, std::string assignment,
 std::vector<Grade> Gradebook::get_grades() {
   return grad;
 }
-
-Gradebook::~Gradebook() {
-  std::cout << "gradebook destructor called" << std::endl;
-}

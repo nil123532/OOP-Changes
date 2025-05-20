@@ -9,7 +9,6 @@ class Instructor : public Person {
   
   Instructor();
   Instructor(std::string name);
-  ~Instructor();
 };
 
 #endif

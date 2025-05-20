@@ -1,28 +1,4 @@
-grade destructor called
-grade destructor called
-grade destructor called
-grade destructor called
-grade destructor called
-grade destructor called
-Student ID: 1884670
-Course ID: 1234
-Assignment: assign 1
-Value: 90
-grade destructor called
-Student ID: 1884670
-Course ID: 1234
-Assignment: assign 2
-Value: 30
-grade destructor called
-Student ID: 1884670
-Course ID: 1234
-Assignment: assign 3
-Value: 100
-grade destructor called
-grade destructor called
-grade destructor called
-grade destructor called
-gradebook destructor called
-grade destructor called
-grade destructor called
-grade destructor called
+Student ID:1884670
+Course ID:1234
+Assignment:assign 1
+Value:90

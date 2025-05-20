@@ -17,7 +17,6 @@ class Grade {
   int get_course_id();
   std::string get_assignment();
   int get_value();
-  ~Grade();
 };
 
 #endif

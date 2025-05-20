@@ -15,7 +15,6 @@ class Gradebook {
   void addGrade(int stud_id, int course_id, std::string assignment, int value);
   //NR - Getting Gradebook back
   std::vector<Grade> get_grades();
-  ~Gradebook();
 };
 
 #endif

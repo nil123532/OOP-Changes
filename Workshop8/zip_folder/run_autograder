@@ -1,5 +1,5 @@
 #!/usr/bin/python3.8
-
+#Created by Nilesh Ramgolam(a1814043)
 # =================================================================
 #                   Question object creation
 # =================================================================
@@ -38,24 +38,24 @@ questions = []
 
 
 c_tests = []
-c_tests.append(ag.CompileTest(submitted_files=['main-1-1.cpp', 'Course.cpp', 'Person.cpp', 'Student.cpp' , 'Instructor.cpp'], points=1))
+c_tests.append(ag.CompileTest(submitted_files=['main-1-1.cpp', 'Course.cpp', 'Person.cpp', 'Student.cpp' , 'Instructor.cpp'], points=2))
 # c_tests.append(ag.CompileTest(submitted_files=['Course.cpp', 'Person.cpp', 'Student.cpp' , 'Instructor.cpp'], provided_files=[f'test-1-1.cpp'], points=1))
 
-q = ag.Question(question_id="1-1", max_points=10, file_points=5, test_points=4,
+q = ag.Question(question_id="1-1", max_points=10, file_points=4, test_points=4,
              compile_tests=c_tests, tester_idx=0, extra_files=['Course.h', 'Person.h', 'Student.h' , 'Instructor.h'])
 questions.append(q)
 
 c_tests = []
-c_tests.append(ag.CompileTest(submitted_files=['main-1-2.cpp', 'Gradebook.cpp', 'Grade.cpp'], points=1))
+c_tests.append(ag.CompileTest(submitted_files=['main-1-2.cpp', 'Gradebook.cpp', 'Grade.cpp'], points=2))
 # c_tests.append(ag.CompileTest(submitted_files=['Gradebook.cpp', 'Grade.cpp'], provided_files=[f'test-1-2.cpp'], points=1))
-q = ag.Question(question_id="1-2", max_points=10, file_points=4, test_points=5,
+q = ag.Question(question_id="1-2", max_points=10, file_points=4, test_points=4,
              compile_tests=c_tests, tester_idx=0, extra_files=['Gradebook.h', 'Grade.h'])
 questions.append(q)
 
 c_tests = []
-c_tests.append(ag.CompileTest(submitted_files=['main-1-3.cpp', 'University.cpp', 'Course.cpp', 'Person.cpp', 'Student.cpp' , 'Instructor.cpp','Gradebook.cpp', 'Grade.cpp'], points=1))
+c_tests.append(ag.CompileTest(submitted_files=['main-1-3.cpp', 'University.cpp', 'Course.cpp', 'Person.cpp', 'Student.cpp' , 'Instructor.cpp','Gradebook.cpp', 'Grade.cpp'], points=5))
 # c_tests.append(ag.CompileTest(submitted_files=['University.cpp', 'Course.cpp','Person.cpp', 'Student.cpp' , 'Instructor.cpp','Gradebook.cpp', 'Grade.cpp'], provided_files=[f'test-1-3.cpp'], points=1))
-q = ag.Question(question_id="1-3", max_points=10, file_points=4, test_points=5,
+q = ag.Question(question_id="1-3", max_points=10, file_points=4, test_points=1,
              compile_tests=c_tests, tester_idx=0, extra_files=['Course.h', 'Person.h', 'Student.h' , 'Instructor.h','University.h','Gradebook.h', 'Grade.h'])
 questions.append(q)
 

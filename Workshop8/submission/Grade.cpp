@@ -26,7 +26,3 @@ std::string Grade::get_assignment() {
 int Grade::get_value() {
   return value;
 }
-
-Grade::~Grade() {
-  std::cout << "grade destructor called" << std::endl;
-}
