@@ -1,0 +1,12 @@
+Test 1 - Create a Vehicle with weight 2000 kg and fuel capacity 60 L, then travel 120 km at 100 km/h
+Fuel: 100%
+Number of trips: 0
+Fuel after travel: 88%
+Number of trips after 1 trip: 1
+
+Test 2 - Checking setters
+Weight: 3000 kg
+Fuel capacity: 70 L
+Fuel: 50%
+Number of trips: 3
+Fuel after refueling: 100%
